@@ -12,9 +12,7 @@ const Index = () => {
   return (
     <SimpleLayout>
       <div className="flex flex-col items-center justify-center min-h-[80vh] text-center px-4">
-        <div className="bg-indigo-600 p-4 rounded-full mb-6">
-          <ShieldCheck className="h-12 w-12 text-white" />
-        </div>
+
         <h1 className="text-4xl font-bold text-slate-800 mb-4">
           Welcome to YodhaAdmin
         </h1>
