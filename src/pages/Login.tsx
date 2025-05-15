@@ -37,12 +37,12 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
-      <div className="w-full max-w-md">
+{/*       <div className="w-full max-w-md">
         <div className="flex justify-center mb-6">
           <div className="bg-indigo-600 p-3 rounded-full">
             <ShieldCheck className="h-8 w-8 text-white" />
           </div>
-        </div>
+        </div> */}
         
         <Card className="border-0 shadow-lg">
           <CardHeader className="space-y-1 text-center">
