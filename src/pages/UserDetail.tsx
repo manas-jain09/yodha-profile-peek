@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
@@ -347,7 +346,7 @@ const UserDetail = () => {
                 </CardContent>
               </Card>
               
-              {profiles.linkedin_url || profiles.github_url || profiles.leetcode_url || profiles.hackerrank_url || profiles.gfg_url ? (
+              {profile.linkedin_url || profile.github_url || profile.leetcode_url || profile.hackerrank_url || profile.gfg_url ? (
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-lg">Social Profiles</CardTitle>

@@ -21,12 +21,35 @@ import type {
 
 export async function getAllProfiles(): Promise<Profile[]> {
   try {
-    const { data, error } = await supabase
-      .from('user_profiles')
+    // Querying profiles table directly instead of the view
+    const { data: profilesData, error: profilesError } = await supabase
+      .from('profiles')
       .select('*');
     
-    if (error) throw error;
-    return data || [];
+    if (profilesError) throw profilesError;
+    
+    // Get additional user data
+    const { data: usersData, error: usersError } = await supabase
+      .from('users')
+      .select('id, username, email, prn, grad_year, department, course');
+    
+    if (usersError) throw usersError;
+    
+    // Combine data from both tables
+    const combinedData: Profile[] = profilesData.map(profile => {
+      const userData = usersData.find(user => user.id === profile.id);
+      return {
+        ...profile,
+        username: userData?.username || '',
+        email: userData?.email || '',
+        prn: userData?.prn || '',
+        grad_year: userData?.grad_year || null,
+        department: userData?.department || null,
+        course: userData?.course || null
+      } as Profile;
+    });
+    
+    return combinedData;
   } catch (error) {
     console.error('Error fetching profiles:', error);
     toast({
@@ -40,35 +63,26 @@ export async function getAllProfiles(): Promise<Profile[]> {
 
 export async function getProfileById(id: string): Promise<Profile | null> {
   try {
-    // First try to get from user_profiles view
-    const { data, error } = await supabase
-      .from('user_profiles')
+    // Get profile data
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
       .select('*')
       .eq('id', id)
       .single();
     
-    if (error) {
-      // If view doesn't work, try to get data by joining manually
-      const profileResult = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', id)
-        .single();
-      
-      const userResult = await supabase
-        .from('users')
-        .select('username, email, prn, grad_year, department, course')
-        .eq('id', id)
-        .single();
-      
-      if (profileResult.error || userResult.error) {
-        throw profileResult.error || userResult.error;
-      }
-      
-      return { ...profileResult.data, ...userResult.data } as Profile;
-    }
+    if (profileError) throw profileError;
     
-    return data;
+    // Get user data
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('username, email, prn, grad_year, department, course')
+      .eq('id', id)
+      .single();
+    
+    if (userError) throw userError;
+    
+    // Combine the data
+    return { ...profile, ...userData } as Profile;
   } catch (error) {
     console.error('Error fetching profile:', error);
     toast({
