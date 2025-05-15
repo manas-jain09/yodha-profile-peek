@@ -27,6 +27,7 @@ const UserFilters = ({ onFilterChange }: UserFiltersProps) => {
     role: []
   });
 
+  // These would ideally come from the database, but we'll hardcode for now
   const statuses = ["Active", "Inactive", "Pending"];
   const roles = ["Admin", "Manager", "User", "Guest"];
 

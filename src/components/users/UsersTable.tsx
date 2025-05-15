@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, ChevronUp, MoreHorizontal } from "lucide-react";
 import { FilterState } from "./UserFilters";
-import { User } from "@/types/user";
+import { User } from "@/types/supabaseTypes";
 
 interface UsersTableProps {
   users: User[];
