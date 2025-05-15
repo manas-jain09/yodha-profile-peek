@@ -14,7 +14,7 @@ import { User } from "@/types/supabaseTypes";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { isAuthenticated, isLoading: authLoading, logout } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, logout, user } = useAuth();
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     department: [],
@@ -22,7 +22,7 @@ const Dashboard = () => {
     gradYear: []
   });
 
-  // Protect this route
+  // Protect this route - redirect to login if not authenticated
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       navigate("/login");
@@ -69,6 +69,7 @@ const Dashboard = () => {
         joinDate: user.created_at
       }));
     },
+    enabled: isAuthenticated, // Only run query when authenticated
   });
 
   const handleFilterChange = (newFilters: FilterState) => {
@@ -96,6 +97,11 @@ const Dashboard = () => {
         </div>
       </SimpleLayout>
     );
+  }
+
+  // Don't render anything if not authenticated (will redirect via useEffect)
+  if (!isAuthenticated) {
+    return null;
   }
 
   return (
