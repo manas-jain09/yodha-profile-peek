@@ -1,5 +1,7 @@
 
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ChevronUp, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
