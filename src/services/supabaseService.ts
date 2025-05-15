@@ -474,3 +474,93 @@ export function calculateLearningProgress(
     completedByLearningPath
   };
 }
+
+// New function to fetch learning paths progress for a user
+export async function getUserLearningPathsProgress(userId: string): Promise<{
+  pathId: string;
+  title: string;
+  description: string;
+  difficulty: string;
+  completed: number;
+  total: number;
+  percentComplete: number;
+}[]> {
+  try {
+    // Get user data to check assigned learning paths
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('assigned_learning_paths')
+      .eq('id', userId)
+      .single();
+    
+    if (userError) throw userError;
+
+    // Get all learning paths
+    const { data: learningPaths, error: pathsError } = await supabase
+      .from('learning_paths')
+      .select('*');
+    
+    if (pathsError) throw pathsError;
+    
+    // Filter paths if user has assigned ones, otherwise use all
+    const relevantPaths = userData.assigned_learning_paths?.length
+      ? learningPaths.filter(path => userData.assigned_learning_paths.includes(path.id))
+      : learningPaths;
+
+    // Get all topics to map to learning paths
+    const { data: topics, error: topicsError } = await supabase
+      .from('topics')
+      .select('id, learning_path_id');
+    
+    if (topicsError) throw topicsError;
+    
+    // Get questions to map to topics
+    const { data: questions, error: questionsError } = await supabase
+      .from('questions')
+      .select('id, topic_id');
+    
+    if (questionsError) throw questionsError;
+    
+    // Get user progress
+    const { data: progress, error: progressError } = await supabase
+      .from('user_progress')
+      .select('question_id, is_completed')
+      .eq('user_id', userId);
+    
+    if (progressError) throw progressError;
+    
+    // Calculate progress for each learning path
+    return relevantPaths.map(path => {
+      // Get topics for this learning path
+      const pathTopics = topics.filter(topic => topic.learning_path_id === path.id);
+      const topicIds = pathTopics.map(topic => topic.id);
+      
+      // Get questions for these topics
+      const pathQuestions = questions.filter(q => topicIds.includes(q.topic_id));
+      const questionIds = pathQuestions.map(q => q.id);
+      
+      // Count completed questions
+      const completedQuestions = progress
+        ? progress.filter(p => questionIds.includes(p.question_id) && p.is_completed).length
+        : 0;
+        
+      const totalQuestions = pathQuestions.length;
+      const percentComplete = totalQuestions > 0 
+        ? Math.round((completedQuestions / totalQuestions) * 100) 
+        : 0;
+      
+      return {
+        pathId: path.id,
+        title: path.title,
+        description: path.description,
+        difficulty: path.difficulty,
+        completed: completedQuestions,
+        total: totalQuestions,
+        percentComplete
+      };
+    });
+  } catch (error) {
+    console.error('Error fetching learning paths progress:', error);
+    return [];
+  }
+}
