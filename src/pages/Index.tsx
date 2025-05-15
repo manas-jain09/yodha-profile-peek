@@ -1,34 +1,40 @@
 
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import SimpleLayout from "@/components/layout/SimpleLayout";
 import { ShieldCheck } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 const Index = () => {
-  const navigate = useNavigate();
-  
+  const { isAuthenticated } = useAuth();
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-slate-100 flex flex-col items-center justify-center p-4">
-      <div className="text-center max-w-2xl">
-        <div className="flex justify-center mb-6">
-          <div className="bg-indigo-600 p-3 rounded-full">
-            <ShieldCheck className="h-12 w-12 text-white" />
-          </div>
+    <SimpleLayout>
+      <div className="flex flex-col items-center justify-center min-h-[80vh] text-center px-4">
+        <div className="bg-indigo-600 p-4 rounded-full mb-6">
+          <ShieldCheck className="h-12 w-12 text-white" />
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
-          YodhaAdmin Dashboard
+        <h1 className="text-4xl font-bold text-slate-800 mb-4">
+          Welcome to YodhaAdmin
         </h1>
-        <p className="text-slate-600 text-lg mb-8">
-          Powerful admin dashboard for managing user profiles with advanced filtering capabilities
+        <p className="text-xl text-slate-600 max-w-xl mb-8">
+          Student management platform to track progress, skills, and achievements
         </p>
-        <Button 
-          onClick={() => navigate('/dashboard')}
-          size="lg" 
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-6 text-lg"
-        >
-          Enter Dashboard
-        </Button>
+        
+        {isAuthenticated ? (
+          <Button asChild size="lg" className="bg-indigo-600 hover:bg-indigo-700">
+            <Link to="/dashboard">Go to Dashboard</Link>
+          </Button>
+        ) : (
+          <div className="flex gap-4 flex-col sm:flex-row">
+            <Button asChild size="lg" className="bg-indigo-600 hover:bg-indigo-700">
+              <Link to="/login">Sign In</Link>
+            </Button>
+          </div>
+        )}
       </div>
-    </div>
+    </SimpleLayout>
   );
 };
 
