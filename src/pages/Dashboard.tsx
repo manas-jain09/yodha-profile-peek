@@ -5,7 +5,7 @@ import AdminLayout from "@/components/layout/AdminLayout";
 import UserFilters, { FilterState } from "@/components/users/UserFilters";
 import UsersTable from "@/components/users/UsersTable";
 import { getAllProfiles, mapProfilesToUsers } from "@/services/supabaseService";
-import { Profile, User } from "@/types/supabaseTypes";
+import { User } from "@/types/supabaseTypes";
 import { toast } from "@/components/ui/use-toast";
 
 const Dashboard = () => {

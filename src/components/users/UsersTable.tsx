@@ -1,20 +1,8 @@
 
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu";
-import { ChevronDown, ChevronUp, MoreHorizontal } from "lucide-react";
 import { FilterState } from "./UserFilters";
 import { User } from "@/types/supabaseTypes";
 
@@ -23,7 +11,7 @@ interface UsersTableProps {
   filters: FilterState;
 }
 
-type SortKey = "name" | "email" | "role" | "status" | "lastActive";
+type SortKey = "name" | "email" | "gradYear" | "department" | "course";
 
 const UsersTable = ({ users, filters }: UsersTableProps) => {
   const navigate = useNavigate();
@@ -53,25 +41,18 @@ const UsersTable = ({ users, filters }: UsersTableProps) => {
       return false;
     }
     
-    // Status filter
-    if (filters.status.length > 0 && !filters.status.includes(user.status)) {
-      return false;
-    }
-    
-    // Role filter
-    if (filters.role.length > 0 && !filters.role.includes(user.role)) {
-      return false;
-    }
+    // We've removed status and role filters since we're not displaying them anymore
     
     return true;
   });
   
   // Sort users
   const sortedUsers = [...filteredUsers].sort((a, b) => {
-    if (sortConfig.key === "lastActive") {
-      const dateA = new Date(a[sortConfig.key]).getTime();
-      const dateB = new Date(b[sortConfig.key]).getTime();
-      return sortConfig.direction === 'asc' ? dateA - dateB : dateB - dateA;
+    if (sortConfig.key === "gradYear") {
+      // Handle grad year sorting (might be null)
+      const yearA = a.grad_year || 0;
+      const yearB = b.grad_year || 0;
+      return sortConfig.direction === 'asc' ? yearA - yearB : yearB - yearA;
     }
     
     if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -87,16 +68,6 @@ const UsersTable = ({ users, filters }: UsersTableProps) => {
   const getSortDirectionIcon = (key: SortKey) => {
     if (sortConfig.key !== key) return null;
     return sortConfig.direction === 'asc' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />;
-  };
-
-  // Status badge colors
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Active": return "bg-green-100 text-green-700";
-      case "Inactive": return "bg-gray-100 text-gray-700";
-      case "Pending": return "bg-yellow-100 text-yellow-700";
-      default: return "bg-gray-100 text-gray-700";
-    }
   };
 
   return (
@@ -122,29 +93,28 @@ const UsersTable = ({ users, filters }: UsersTableProps) => {
             </TableHead>
             <TableHead 
               className="cursor-pointer"
-              onClick={() => requestSort("role")}
+              onClick={() => requestSort("gradYear")}
             >
               <div className="flex items-center">
-                Role {getSortDirectionIcon("role")}
+                Grad Year {getSortDirectionIcon("gradYear")}
               </div>
             </TableHead>
             <TableHead 
               className="cursor-pointer"
-              onClick={() => requestSort("status")}
+              onClick={() => requestSort("department")}
             >
               <div className="flex items-center">
-                Status {getSortDirectionIcon("status")}
+                Department {getSortDirectionIcon("department")}
               </div>
             </TableHead>
             <TableHead 
               className="cursor-pointer"
-              onClick={() => requestSort("lastActive")}
+              onClick={() => requestSort("course")}
             >
               <div className="flex items-center">
-                Last Active {getSortDirectionIcon("lastActive")}
+                Course {getSortDirectionIcon("course")}
               </div>
             </TableHead>
-            <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -156,53 +126,17 @@ const UsersTable = ({ users, filters }: UsersTableProps) => {
                 onClick={() => viewUserDetails(user.id)}
               >
                 <TableCell>
-                  <div className="flex items-center space-x-3">
-                    <Avatar>
-                      <AvatarImage src={user.avatar} alt={user.name} />
-                      <AvatarFallback>{user.name.substring(0, 2).toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                    <span className="font-medium">{user.name}</span>
-                  </div>
+                  <span className="font-medium">{user.name}</span>
                 </TableCell>
                 <TableCell>{user.email}</TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell>
-                  <Badge variant="outline" className={cn(getStatusColor(user.status))}>
-                    {user.status}
-                  </Badge>
-                </TableCell>
-                <TableCell>{new Date(user.lastActive).toLocaleDateString()}</TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                      <Button variant="ghost" size="sm">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={(e) => {
-                        e.stopPropagation();
-                        viewUserDetails(user.id);
-                      }}>
-                        View Details
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                        Edit User
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={(e) => e.stopPropagation()} className="text-red-600">
-                        Deactivate
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
+                <TableCell>{user.grad_year || "N/A"}</TableCell>
+                <TableCell>{user.department || "N/A"}</TableCell>
+                <TableCell>{user.course || "N/A"}</TableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+              <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                 No users found matching your filters
               </TableCell>
             </TableRow>

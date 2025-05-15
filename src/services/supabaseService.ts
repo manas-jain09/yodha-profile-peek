@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/use-toast";
 import type { 
@@ -284,20 +283,116 @@ export async function mapProfileToUser(profile: Profile): Promise<User> {
     id: profile.id,
     name: profile.real_name || profile.username,
     email: profile.email,
-    avatar: profile.profile_picture_url || `https://i.pravatar.cc/150?u=${profile.id}`,
-    role: "User", // Default role, could be fetched from a roles table if available
-    status: "Active", // Default status
-    lastActive: profile.updated_at,
-    phone: "", // Not available in the profile data
-    location: profile.location || "",
-    bio: profile.bio || "",
-    joinDate: profile.created_at,
+    grad_year: profile.grad_year,
     department: profile.department || "",
+    course: profile.course || "",
+    avatar: profile.profile_picture_url || `https://i.pravatar.cc/150?u=${profile.id}`,
+    joinDate: profile.created_at,
+    bio: profile.bio || "",
+    location: profile.location || "",
   };
 }
 
 export async function mapProfilesToUsers(profiles: Profile[]): Promise<User[]> {
   return Promise.all(profiles.map(mapProfileToUser));
+}
+
+// Modified function to segregate assessments and certifications
+export async function getUserAssessmentsAndCertificates(userId: string): Promise<{
+  assessments: Assessment[];
+  certificates: Certificate[];
+}> {
+  try {
+    // Get assessments
+    const { data: assessments, error: assessmentsError } = await supabase
+      .from('assessments')
+      .select('*')
+      .eq('user_id', userId);
+    
+    if (assessmentsError) throw assessmentsError;
+    
+    // Get certificates
+    const { data: certificates, error: certificatesError } = await supabase
+      .from('certificates')
+      .select('*')
+      .eq('user_id', userId);
+    
+    if (certificatesError) throw certificatesError;
+    
+    return {
+      assessments: assessments || [],
+      certificates: certificates || []
+    };
+  } catch (error) {
+    console.error('Error fetching assessments and certificates:', error);
+    return { assessments: [], certificates: [] };
+  }
+}
+
+// Helper to calculate learning progress broken down by difficulty
+export async function getLearningProgressByDifficulty(userId: string): Promise<{
+  easy: { completed: number, total: number },
+  medium: { completed: number, total: number },
+  hard: { completed: number, total: number },
+  theory: { completed: number, total: number }
+}> {
+  try {
+    // Get user progress
+    const { data: progress, error: progressError } = await supabase
+      .from('user_progress')
+      .select('*')
+      .eq('user_id', userId);
+    
+    if (progressError) throw progressError;
+    
+    // Get all questions
+    const { data: questions, error: questionsError } = await supabase
+      .from('questions')
+      .select('*');
+    
+    if (questionsError) throw questionsError;
+    
+    // Initialize counters
+    const result = {
+      easy: { completed: 0, total: 0 },
+      medium: { completed: 0, total: 0 },
+      hard: { completed: 0, total: 0 },
+      theory: { completed: 0, total: 0 }
+    };
+    
+    // Count questions by difficulty
+    questions.forEach(question => {
+      const difficulty = question.difficulty.toLowerCase();
+      if (difficulty === 'easy') result.easy.total++;
+      else if (difficulty === 'medium') result.medium.total++;
+      else if (difficulty === 'hard') result.hard.total++;
+      else if (difficulty === 'theory') result.theory.total++;
+    });
+    
+    // Count completed questions by difficulty
+    if (progress) {
+      progress.filter(p => p.is_completed).forEach(p => {
+        const question = questions.find(q => q.id === p.question_id);
+        if (question) {
+          const difficulty = question.difficulty.toLowerCase();
+          if (difficulty === 'easy') result.easy.completed++;
+          else if (difficulty === 'medium') result.medium.completed++;
+          else if (difficulty === 'hard') result.hard.completed++;
+          else if (difficulty === 'theory') result.theory.completed++;
+        }
+      });
+    }
+    
+    return result;
+  } catch (error) {
+    console.error('Error calculating learning progress:', error);
+    return {
+      easy: { completed: 0, total: 0 },
+      medium: { completed: 0, total: 0 },
+      hard: { completed: 0, total: 0 },
+      theory: { completed: 0, total: 0 }
+    };
+  }
 }
 
 // Helper to calculate learning progress statistics

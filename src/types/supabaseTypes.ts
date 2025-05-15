@@ -1,4 +1,3 @@
-
 export interface Profile {
   id: string;
   real_name: string;
@@ -169,18 +168,10 @@ export interface User {
   name: string;
   email: string;
   avatar: string;
-  role: string;
-  status: string;
-  lastActive: string;
-  phone?: string;
+  grad_year?: number | null;
+  department?: string;
+  course?: string;
+  joinDate: string;
   location?: string;
   bio?: string;
-  joinDate: string;
-  department?: string;
-  permissions?: string[];
-  recentActivity?: {
-    action: string;
-    date: string;
-    details: string;
-  }[];
 }
