@@ -34,10 +34,12 @@ import {
   Book, 
   BookOpen, 
   Award, 
-  Star,
-  Briefcase,
+  Star, 
   GraduationCap,
-  Trophy 
+  Briefcase,
+  Code,
+  File,
+  Trophy
 } from "lucide-react";
 import { Profile } from "@/types/supabaseTypes";
 
