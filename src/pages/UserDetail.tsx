@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
@@ -249,87 +248,67 @@ const UserDetail = () => {
   
   return (
     <AdminLayout>
-      <div className="pb-10 space-y-8">
+      <div className="space-y-6 animate-fade-in">
         {/* Header */}
-        <div className="flex items-center justify-between mb-2 animate-fade-in">
+        <div className="flex items-center justify-between">
           <Button variant="outline" onClick={goBack}>
             <ArrowLeft className="mr-2 h-4 w-4" /> Back
           </Button>
         </div>
         
-        {/* Profile Header Card */}
-        <div className="rounded-xl overflow-hidden bg-gradient-to-r from-indigo-50 via-purple-50 to-indigo-50 shadow-md animate-fade-in">
-          <div className="p-6 md:p-8">
-            <div className="flex flex-col md:flex-row gap-6">
-              {/* Profile Image */}
-              <div className="flex-shrink-0">
-                <div className="relative">
-                  <div className="h-24 w-24 md:h-32 md:w-32 rounded-full overflow-hidden border-4 border-white shadow-md transition-transform hover:scale-105 duration-300">
-                    <img 
-                      src={profile.profile_picture_url || `https://i.pravatar.cc/150?u=${profile.id}`} 
-                      alt={profile.real_name} 
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
+        {/* Profile Header Section */}
+        <Card className="overflow-hidden border-0 shadow-lg transition-all duration-300 hover:shadow-xl bg-gradient-to-r from-indigo-50 to-purple-50">
+          <div className="relative px-6 py-10 md:px-10 md:py-16">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+              <div className="relative">
+                <div className="h-28 w-28 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                  <img 
+                    src={profile.profile_picture_url || `https://i.pravatar.cc/150?u=${profile.id}`} 
+                    alt={profile.real_name} 
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="absolute -right-2 -bottom-2">
                   {badgesData.userBadges.length > 0 && (
-                    <div className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full bg-yellow-400 flex items-center justify-center shadow-md">
-                      <Trophy className="h-4 w-4 text-white" />
+                    <div className="h-8 w-8 rounded-full bg-yellow-400 flex items-center justify-center shadow-md">
+                      <Trophy size={16} className="text-white" />
                     </div>
                   )}
                 </div>
               </div>
-              
-              {/* Profile Info */}
-              <div className="flex-grow">
+              <div className="text-center md:text-left">
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-800">{profile.real_name}</h1>
-                <p className="text-gray-600 mt-1">
+                <p className="text-sm text-gray-500 mt-1">
                   {profile.email} • Joined {formatDate(profile.created_at)}
                 </p>
-                
-                <div className="mt-3 flex flex-wrap gap-2">
+                <div className="mt-3 flex flex-wrap gap-2 justify-center md:justify-start">
                   {profile.department && (
-                    <Badge variant="secondary" className="hover-scale">
-                      <GraduationCap className="mr-1 h-3.5 w-3.5" />
+                    <Badge variant="secondary" className="text-xs">
+                      <GraduationCap className="mr-1 h-3 w-3" />
                       {profile.department}
                     </Badge>
                   )}
                   {profile.course && (
-                    <Badge variant="secondary" className="hover-scale">
-                      <BookOpen className="mr-1 h-3.5 w-3.5" />
+                    <Badge variant="secondary" className="text-xs">
+                      <BookOpen className="mr-1 h-3 w-3" />
                       {profile.course}
                     </Badge>
                   )}
                   {profile.grad_year && (
-                    <Badge variant="secondary" className="hover-scale">
+                    <Badge variant="secondary" className="text-xs">
                       Class of {profile.grad_year}
                     </Badge>
                   )}
+                  {profile.location && (
+                    <Badge variant="outline" className="text-xs">
+                      {profile.location}
+                    </Badge>
+                  )}
                 </div>
-                
-                {profile.bio && (
-                  <p className="mt-4 text-gray-700 max-w-3xl">{profile.bio}</p>
-                )}
-                
-                {/* Total Progress */}
-                {totalQuestions > 0 && (
-                  <div className="mt-6 bg-white rounded-lg p-4 max-w-md shadow-sm">
-                    <div className="flex justify-between mb-2">
-                      <span className="font-medium text-gray-700">Overall Learning Progress</span>
-                      <span className="font-semibold">{Math.round(overallProgressPercent)}%</span>
-                    </div>
-                    <Progress 
-                      value={overallProgressPercent} 
-                      className="h-2 bg-gray-100"
-                    />
-                    <p className="mt-1 text-xs text-gray-500">
-                      {totalCompleted} of {totalQuestions} questions completed
-                    </p>
-                  </div>
-                )}
               </div>
               
-              {/* Social Links */}
-              <div className="md:ml-auto flex flex-wrap md:flex-col gap-3 justify-center md:justify-start">
+              {/* Social links */}
+              <div className="md:ml-auto flex items-center gap-2">
                 {profile.linkedin_url && (
                   <a 
                     href={profile.linkedin_url} 
@@ -340,7 +319,6 @@ const UserDetail = () => {
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                    </svg>
                   </a>
                 )}
                 {profile.github_url && (
@@ -396,8 +374,9 @@ const UserDetail = () => {
               </div>
             </div>
           </div>
-        </div>
+        </Card>
         
+        {/* Main content grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Column */}
           <div className="lg:col-span-2 space-y-6">
@@ -639,7 +618,7 @@ const UserDetail = () => {
               <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in" style={{ animationDelay: '400ms' }}>
                 <CardHeader className="bg-gradient-to-r from-purple-50 to-fuchsia-50">
                   <CardTitle className="text-lg flex items-center">
-                    <FileText className="mr-2 h-5 w-5 text-purple-600" />
+                    <File className="mr-2 h-5 w-5 text-purple-600" />
                     Publications
                   </CardTitle>
                 </CardHeader>
