@@ -1,3 +1,4 @@
+
 export interface Profile {
   id: string;
   real_name: string;
@@ -19,6 +20,7 @@ export interface Profile {
   grad_year: number | null;
   department: string | null;
   course: string | null;
+  active: boolean | null;
 }
 
 export interface Training {
