@@ -79,7 +79,7 @@ const Dashboard = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      navigate("/login");
+      // Navigation is now handled in the logout function
     } catch (error) {
       toast({
         title: "Error",
@@ -112,14 +112,14 @@ const Dashboard = () => {
             <h1 className="text-2xl font-bold text-slate-800">User Management</h1>
             <p className="text-slate-500 mt-1">View and manage all users in the system.</p>
           </div>
-{/*           <Button 
+          <Button 
             variant="outline" 
             onClick={handleLogout} 
             className="flex items-center gap-2 hover:bg-red-50 hover:text-red-600 transition-colors"
           >
             <LogOut size={16} />
             Logout
-          </Button> */}
+          </Button>
         </div>
 
         <UserFilters onFilterChange={handleFilterChange} />

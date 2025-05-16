@@ -112,7 +112,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         description: "You have been successfully logged out",
       });
       
-      navigate("/");
+      // Navigate after state update is complete
+      setTimeout(() => {
+        navigate("/login");
+      }, 0);
     } catch (error) {
       console.error("Logout error:", error);
       toast({
