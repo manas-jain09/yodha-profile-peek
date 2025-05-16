@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,13 +40,13 @@ const Login = () => {
       <div className="w-full max-w-md">
         <div className="flex justify-center mb-6">
           <div className="bg-indigo-600 p-3 rounded-full">
-{/*             <ShieldCheck className="h-8 w-8 text-white" /> */}
+            <ShieldCheck className="h-8 w-8 text-white" />
           </div>
         </div>
         
         <Card className="border-0 shadow-lg">
           <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
+            <CardTitle className="text-2xl font-bold">Welcome to YodhaAdmin</CardTitle>
             <CardDescription>
               Enter your PRN and password to access the admin panel
             </CardDescription>
