@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
@@ -27,6 +28,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
 import { 
   ArrowLeft, 
@@ -38,7 +40,12 @@ import {
   Briefcase,
   Code,
   File,
-  Trophy
+  Trophy,
+  User,
+  Gauge,
+  ListChecks,
+  FileText,
+  Layers
 } from "lucide-react";
 import { Profile } from "@/types/supabaseTypes";
 import UserAvatar from "@/components/users/UserAvatar";
@@ -258,30 +265,35 @@ const UserDetail = () => {
   
   return (
     <SimpleLayout>
-      <div className="space-y-6 animate-fade-in">
-        {/* Header */}
+      <div className="space-y-8 animate-fade-in">
+        {/* Header with Back Button */}
         <div className="flex items-center justify-between">
-          <Button variant="outline" onClick={goBack}>
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back
+          <Button variant="outline" onClick={goBack} className="hover:bg-slate-100 transition-colors">
+            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Users
           </Button>
         </div>
         
-        {/* Profile Header Section */}
-        <Card className="overflow-hidden border-0 shadow-lg transition-all duration-300 hover:shadow-xl bg-gradient-to-r from-indigo-50 to-purple-50">
+        {/* Enhanced Profile Header Section */}
+        <Card className="overflow-hidden border-0 shadow-lg transition-all duration-300 hover:shadow-xl bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50">
           <div className="relative px-6 py-10 md:px-10 md:py-16">
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
               <div className="relative">
-                <UserAvatar name={profile.real_name} size="lg" className="h-28 w-28" />
+                <UserAvatar name={profile.real_name} size="lg" className="h-28 w-28 shadow-lg border-4 border-white" />
                 <div className="absolute -right-2 -bottom-2">
                   {badgesData.userBadges.length > 0 && (
-                    <div className="h-8 w-8 rounded-full bg-yellow-400 flex items-center justify-center shadow-md">
+                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center shadow-md">
                       <Trophy size={16} className="text-white" />
                     </div>
                   )}
                 </div>
               </div>
               <div className="text-center md:text-left">
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-800">{profile.real_name}</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-800 flex items-center">
+                  {profile.real_name}
+                  {profile.active && (
+                    <Badge className="ml-3 bg-green-500 hover:bg-green-600">Active</Badge>
+                  )}
+                </h1>
                 <p className="text-sm text-gray-500 mt-1">
                   {profile.email} • Joined {formatDate(profile.created_at)}
                 </p>
@@ -318,7 +330,7 @@ const UserDetail = () => {
                     href={profile.linkedin_url} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors hover:scale-110 duration-200"
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors hover:scale-110 duration-200 shadow-sm"
                     aria-label="LinkedIn"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
@@ -331,7 +343,7 @@ const UserDetail = () => {
                     href={profile.github_url} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-50 text-gray-800 hover:bg-gray-100 transition-colors hover:scale-110 duration-200"
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-50 text-gray-800 hover:bg-gray-100 transition-colors hover:scale-110 duration-200 shadow-sm"
                     aria-label="GitHub"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
@@ -344,7 +356,7 @@ const UserDetail = () => {
                     href={profile.leetcode_url} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="w-10 h-10 flex items-center justify-center rounded-full bg-yellow-50 text-yellow-600 hover:bg-yellow-100 transition-colors hover:scale-110 duration-200"
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-yellow-50 text-yellow-600 hover:bg-yellow-100 transition-colors hover:scale-110 duration-200 shadow-sm"
                     aria-label="LeetCode"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -357,7 +369,7 @@ const UserDetail = () => {
                     href={profile.hackerrank_url} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="w-10 h-10 flex items-center justify-center rounded-full bg-green-50 text-green-600 hover:bg-green-100 transition-colors hover:scale-110 duration-200"
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-green-50 text-green-600 hover:bg-green-100 transition-colors hover:scale-110 duration-200 shadow-sm"
                     aria-label="HackerRank"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -370,7 +382,7 @@ const UserDetail = () => {
                     href={profile.gfg_url} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="w-10 h-10 flex items-center justify-center rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors hover:scale-110 duration-200"
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors hover:scale-110 duration-200 shadow-sm"
                     aria-label="GeeksforGeeks"
                   >
                     <span className="font-bold text-sm">G4G</span>
@@ -378,247 +390,508 @@ const UserDetail = () => {
                 )}
               </div>
             </div>
+            
+            {/* Overall Progress Bar */}
+            <div className="mt-8 md:mt-10">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-sm font-medium text-gray-700">Overall Learning Progress</h3>
+                <span className="text-sm font-semibold">
+                  {Math.round(overallProgressPercent)}%
+                </span>
+              </div>
+              <Progress 
+                value={overallProgressPercent} 
+                className="h-2 bg-gradient-to-r from-blue-200 via-indigo-200 to-purple-200"
+              />
+            </div>
           </div>
         </Card>
         
-        {/* Main content grid */}
-        <div className="grid grid-cols-1 gap-6">
-          {/* Learning Paths Progress */}
-          {learningPathsProgress.length > 0 && (
+        {/* Tabbed Content */}
+        <Tabs defaultValue="progress" className="w-full">
+          <TabsList className="bg-white mb-6 p-1 shadow-sm border rounded-lg w-full flex flex-wrap justify-start overflow-x-auto">
+            <TabsTrigger value="progress" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-800">
+              <Gauge className="h-4 w-4 mr-2" /> Progress
+            </TabsTrigger>
+            <TabsTrigger value="skills" className="data-[state=active]:bg-emerald-50 data-[state=active]:text-emerald-800">
+              <Award className="h-4 w-4 mr-2" /> Skills & Badges
+            </TabsTrigger>
+            <TabsTrigger value="experience" className="data-[state=active]:bg-amber-50 data-[state=active]:text-amber-800">
+              <Briefcase className="h-4 w-4 mr-2" /> Experience
+            </TabsTrigger>
+            <TabsTrigger value="education" className="data-[state=active]:bg-violet-50 data-[state=active]:text-violet-800">
+              <GraduationCap className="h-4 w-4 mr-2" /> Education
+            </TabsTrigger>
+            <TabsTrigger value="projects" className="data-[state=active]:bg-teal-50 data-[state=active]:text-teal-800">
+              <Code className="h-4 w-4 mr-2" /> Projects
+            </TabsTrigger>
+            <TabsTrigger value="publications" className="data-[state=active]:bg-purple-50 data-[state=active]:text-purple-800">
+              <FileText className="h-4 w-4 mr-2" /> Publications
+            </TabsTrigger>
+          </TabsList>
+          
+          {/* Progress Tab Content */}
+          <TabsContent value="progress" className="space-y-6">
+            {/* Learning Paths Progress */}
+            {learningPathsProgress.length > 0 && (
+              <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in">
+                <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50">
+                  <CardTitle className="text-lg flex items-center">
+                    <BookOpen className="mr-2 h-5 w-5 text-blue-600" />
+                    Learning Paths Progress
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="space-y-6">
+                    {learningPathsProgress.map((path, index) => (
+                      <div 
+                        key={path.pathId} 
+                        className="animate-fade-in"
+                        style={{ animationDelay: `${index * 100}ms` }}
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
+                          <div>
+                            <h3 className="font-semibold text-gray-800">{path.title}</h3>
+                            <p className="text-sm text-gray-500">{path.description}</p>
+                          </div>
+                          <div className="mt-2 sm:mt-0">
+                            <Badge 
+                              className={`${getDifficultyColor(path.difficulty)} text-white`}
+                            >
+                              {path.difficulty}
+                            </Badge>
+                          </div>
+                        </div>
+                        <div className="mt-3">
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>{path.completed} of {path.total} completed</span>
+                            <span className="font-medium">{path.percentComplete}%</span>
+                          </div>
+                          <Progress 
+                            value={path.percentComplete} 
+                            className={`h-2 ${getDifficultyColor(path.difficulty).replace('bg-', 'bg-opacity-20 ')} ${getDifficultyColor(path.difficulty)}`}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+            
+            {/* Learning Progress By Difficulty */}
             <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in">
-              <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50">
+              <CardHeader className="bg-gradient-to-r from-indigo-50 to-blue-50">
                 <CardTitle className="text-lg flex items-center">
-                  <BookOpen className="mr-2 h-5 w-5 text-indigo-600" />
-                  Learning Paths Progress
+                  <Layers className="mr-2 h-5 w-5 text-indigo-600" />
+                  Progress by Difficulty
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6">
-                <div className="space-y-6">
-                  {learningPathsProgress.map((path, index) => (
-                    <div 
-                      key={path.pathId} 
-                      className="animate-fade-in"
-                      style={{ animationDelay: `${index * 100}ms` }}
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
-                        <div>
-                          <h3 className="font-semibold text-gray-800">{path.title}</h3>
-                          <p className="text-sm text-gray-500">{path.description}</p>
-                        </div>
-                        <div className="mt-2 sm:mt-0">
-                          <Badge 
-                            className={`${getDifficultyColor(path.difficulty)} text-white`}
-                          >
-                            {path.difficulty}
-                          </Badge>
-                        </div>
-                      </div>
-                      <div className="mt-3">
-                        <div className="flex justify-between text-sm mb-1">
-                          <span>{path.completed} of {path.total} completed</span>
-                          <span className="font-medium">{path.percentComplete}%</span>
-                        </div>
-                        <Progress 
-                          value={path.percentComplete} 
-                          className={`h-2 ${getDifficultyColor(path.difficulty).replace('bg-', 'bg-opacity-20 ')} ${getDifficultyColor(path.difficulty)}`}
-                        />
-                      </div>
+                <div className="space-y-4">
+                  {/* Easy Questions */}
+                  <div className="animate-fade-in" style={{ animationDelay: '150ms' }}>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-sm font-medium flex items-center">
+                        <span className="h-3 w-3 rounded-full bg-emerald-500 mr-2"></span>
+                        Easy Questions
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {progressByDifficulty.easy.completed} / {progressByDifficulty.easy.total}
+                      </span>
                     </div>
-                  ))}
+                    <Progress 
+                      value={progressByDifficulty.easy.total > 0 
+                        ? (progressByDifficulty.easy.completed / progressByDifficulty.easy.total) * 100 
+                        : 0} 
+                      className="h-2 bg-emerald-100"
+                    />
+                  </div>
+                  
+                  {/* Medium Questions */}
+                  <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-sm font-medium flex items-center">
+                        <span className="h-3 w-3 rounded-full bg-amber-500 mr-2"></span>
+                        Medium Questions
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {progressByDifficulty.medium.completed} / {progressByDifficulty.medium.total}
+                      </span>
+                    </div>
+                    <Progress 
+                      value={progressByDifficulty.medium.total > 0 
+                        ? (progressByDifficulty.medium.completed / progressByDifficulty.medium.total) * 100 
+                        : 0} 
+                      className="h-2 bg-amber-100"
+                    />
+                  </div>
+                  
+                  {/* Hard Questions */}
+                  <div className="animate-fade-in" style={{ animationDelay: '250ms' }}>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-sm font-medium flex items-center">
+                        <span className="h-3 w-3 rounded-full bg-rose-500 mr-2"></span>
+                        Hard Questions
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {progressByDifficulty.hard.completed} / {progressByDifficulty.hard.total}
+                      </span>
+                    </div>
+                    <Progress 
+                      value={progressByDifficulty.hard.total > 0 
+                        ? (progressByDifficulty.hard.completed / progressByDifficulty.hard.total) * 100 
+                        : 0} 
+                      className="h-2 bg-rose-100"
+                    />
+                  </div>
+                  
+                  {/* Theory Questions */}
+                  <div className="animate-fade-in" style={{ animationDelay: '300ms' }}>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-sm font-medium flex items-center">
+                        <span className="h-3 w-3 rounded-full bg-blue-500 mr-2"></span>
+                        Theory Questions
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {progressByDifficulty.theory.completed} / {progressByDifficulty.theory.total}
+                      </span>
+                    </div>
+                    <Progress 
+                      value={progressByDifficulty.theory.total > 0 
+                        ? (progressByDifficulty.theory.completed / progressByDifficulty.theory.total) * 100 
+                        : 0} 
+                      className="h-2 bg-blue-100"
+                    />
+                  </div>
                 </div>
               </CardContent>
             </Card>
-          )}
+          </TabsContent>
           
-          {/* Learning Progress By Difficulty */}
-          <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in" style={{ animationDelay: '100ms' }}>
-            <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50">
-              <CardTitle className="text-lg flex items-center">
-                <Award className="mr-2 h-5 w-5 text-blue-600" />
-                Learning Progress
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="space-y-4">
-                {/* Easy Questions */}
-                <div className="animate-fade-in" style={{ animationDelay: '150ms' }}>
-                  <div className="flex justify-between mb-1">
-                    <span className="text-sm font-medium flex items-center">
-                      <span className="h-3 w-3 rounded-full bg-emerald-500 mr-2"></span>
-                      Easy Questions
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      {progressByDifficulty.easy.completed} / {progressByDifficulty.easy.total}
-                    </span>
-                  </div>
-                  <Progress 
-                    value={progressByDifficulty.easy.total > 0 
-                      ? (progressByDifficulty.easy.completed / progressByDifficulty.easy.total) * 100 
-                      : 0} 
-                    className="h-2 bg-emerald-100"
-                  />
-                </div>
-                
-                {/* Medium Questions */}
-                <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>
-                  <div className="flex justify-between mb-1">
-                    <span className="text-sm font-medium flex items-center">
-                      <span className="h-3 w-3 rounded-full bg-amber-500 mr-2"></span>
-                      Medium Questions
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      {progressByDifficulty.medium.completed} / {progressByDifficulty.medium.total}
-                    </span>
-                  </div>
-                  <Progress 
-                    value={progressByDifficulty.medium.total > 0 
-                      ? (progressByDifficulty.medium.completed / progressByDifficulty.medium.total) * 100 
-                      : 0} 
-                    className="h-2 bg-amber-100"
-                  />
-                </div>
-                
-                {/* Hard Questions */}
-                <div className="animate-fade-in" style={{ animationDelay: '250ms' }}>
-                  <div className="flex justify-between mb-1">
-                    <span className="text-sm font-medium flex items-center">
-                      <span className="h-3 w-3 rounded-full bg-rose-500 mr-2"></span>
-                      Hard Questions
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      {progressByDifficulty.hard.completed} / {progressByDifficulty.hard.total}
-                    </span>
-                  </div>
-                  <Progress 
-                    value={progressByDifficulty.hard.total > 0 
-                      ? (progressByDifficulty.hard.completed / progressByDifficulty.hard.total) * 100 
-                      : 0} 
-                    className="h-2 bg-rose-100"
-                  />
-                </div>
-                
-                {/* Theory Questions */}
-                <div className="animate-fade-in" style={{ animationDelay: '300ms' }}>
-                  <div className="flex justify-between mb-1">
-                    <span className="text-sm font-medium flex items-center">
-                      <span className="h-3 w-3 rounded-full bg-blue-500 mr-2"></span>
-                      Theory Questions
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      {progressByDifficulty.theory.completed} / {progressByDifficulty.theory.total}
-                    </span>
-                  </div>
-                  <Progress 
-                    value={progressByDifficulty.theory.total > 0 
-                      ? (progressByDifficulty.theory.completed / progressByDifficulty.theory.total) * 100 
-                      : 0} 
-                    className="h-2 bg-blue-100"
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          {/* Work Experience */}
-          {workExperience.length > 0 && (
-            <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in" style={{ animationDelay: '200ms' }}>
-              <CardHeader className="bg-gradient-to-r from-gray-50 to-slate-50">
+          {/* Skills and Badges Tab Content */}
+          <TabsContent value="skills" className="space-y-6">
+            {/* Skills */}
+            <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in">
+              <CardHeader className="bg-gradient-to-r from-emerald-50 to-teal-50">
                 <CardTitle className="text-lg flex items-center">
-                  <Briefcase className="mr-2 h-5 w-5 text-gray-700" />
+                  <ListChecks className="mr-2 h-5 w-5 text-emerald-600" />
+                  Skills
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                {skills.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {skills.map((skill, index) => (
+                      <Badge 
+                        key={skill.id} 
+                        variant="secondary" 
+                        className="px-3 py-1 text-sm hover:bg-emerald-100 transition-colors animate-fade-in hover-scale"
+                        style={{ animationDelay: `${200 + (index * 30)}ms` }}
+                      >
+                        {skill.skill_name}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-slate-500 text-center py-4">No skills found</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Badges */}
+            <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in">
+              <CardHeader className="bg-gradient-to-r from-yellow-50 to-amber-50">
+                <CardTitle className="text-lg flex items-center">
+                  <Trophy className="mr-2 h-5 w-5 text-amber-600" />
+                  Earned Badges
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                {userBadges.length > 0 ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                    {userBadges.map((userBadge, index) => {
+                      const badge = badgeTypes.find(b => b.id === userBadge.badge_id);
+                      if (!badge) return null;
+                      
+                      return (
+                        <div 
+                          key={userBadge.id} 
+                          className="flex flex-col items-center p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover-scale animate-fade-in"
+                          style={{
+                            backgroundColor: badge.background_color || '#f8fafc',
+                            color: badge.text_color || '#1e293b',
+                            animationDelay: `${250 + (index * 50)}ms`
+                          }}
+                        >
+                          {/* Use icon based on icon_name */}
+                          {badge.icon_name === 'book' && <Book className="h-8 w-8 mb-3" />}
+                          {badge.icon_name === 'book-open' && <BookOpen className="h-8 w-8 mb-3" />}
+                          {badge.icon_name === 'award' && <Award className="h-8 w-8 mb-3" />}
+                          {badge.icon_name === 'star' && <Star className="h-8 w-8 mb-3" />}
+                          {badge.icon_name === 'file' && <File className="h-8 w-8 mb-3" />}
+                          
+                          <span className="text-sm font-medium text-center">{badge.name}</span>
+                          <span className="text-xs mt-1 opacity-80">
+                            {formatDate(userBadge.earned_at)}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-slate-500 text-center py-4">No badges earned yet</p>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          {/* Experience Tab Content */}
+          <TabsContent value="experience" className="space-y-6">
+            {/* Work Experience */}
+            <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in">
+              <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50">
+                <CardTitle className="text-lg flex items-center">
+                  <Briefcase className="mr-2 h-5 w-5 text-amber-600" />
                   Work Experience
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="divide-y">
-                  {workExperience.map((work, index) => (
-                    <div 
-                      key={work.id} 
-                      className="p-6 hover:bg-gray-50 transition-colors animate-fade-in" 
-                      style={{ animationDelay: `${250 + (index * 50)}ms` }}
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-start justify-between">
-                        <div>
-                          <h3 className="font-semibold text-gray-800">{work.position}</h3>
-                          <p className="text-gray-600">{work.company}</p>
-                          <p className="text-sm text-gray-500 mt-1">
-                            {formatDate(work.start_date)} - {work.end_date ? formatDate(work.end_date) : 'Present'}
-                            {work.location && ` • ${work.location}`}
-                          </p>
+                {workExperience.length > 0 ? (
+                  <div className="divide-y">
+                    {workExperience.map((work, index) => (
+                      <div 
+                        key={work.id} 
+                        className="p-6 hover:bg-amber-50/30 transition-colors animate-fade-in" 
+                        style={{ animationDelay: `${250 + (index * 50)}ms` }}
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between">
+                          <div>
+                            <h3 className="font-semibold text-gray-800">{work.position}</h3>
+                            <p className="text-gray-600">{work.company}</p>
+                            <p className="text-sm text-gray-500 mt-1">
+                              {formatDate(work.start_date)} - {work.end_date ? formatDate(work.end_date) : 'Present'}
+                              {work.location && ` • ${work.location}`}
+                            </p>
+                          </div>
                         </div>
+                        <p className="mt-3 text-gray-700">{work.description}</p>
+                        {work.technologies && work.technologies.length > 0 && (
+                          <div className="mt-3 flex flex-wrap gap-1.5">
+                            {work.technologies.map((tech, idx) => (
+                              <Badge key={idx} variant="outline" className="hover-scale">{tech}</Badge>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                      <p className="mt-3 text-gray-700">{work.description}</p>
-                      {work.technologies && work.technologies.length > 0 && (
-                        <div className="mt-3 flex flex-wrap gap-1.5">
-                          {work.technologies.map((tech, idx) => (
-                            <Badge key={idx} variant="outline" className="hover-scale">{tech}</Badge>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-slate-500 text-center py-6">No work experience found</p>
+                )}
               </CardContent>
             </Card>
-          )}
+          </TabsContent>
           
-          {/* Projects */}
-          {projects.length > 0 && (
-            <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in" style={{ animationDelay: '300ms' }}>
+          {/* Education Tab Content */}
+          <TabsContent value="education" className="space-y-6">
+            {/* Training */}
+            <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in">
+              <CardHeader className="bg-gradient-to-r from-violet-50 to-purple-50">
+                <CardTitle className="text-lg flex items-center">
+                  <BookOpen className="mr-2 h-5 w-5 text-violet-600" />
+                  Trainings & Courses
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                {trainings.length > 0 ? (
+                  <div className="space-y-4">
+                    {trainings.map((training, index) => (
+                      <div 
+                        key={training.id}
+                        className="p-4 rounded-lg border border-violet-100 hover:bg-violet-50/30 transition-colors animate-fade-in"
+                        style={{ animationDelay: `${300 + (index * 50)}ms` }}
+                      >
+                        <h4 className="font-medium text-gray-800">{training.title}</h4>
+                        <p className="text-sm text-gray-600">{training.organization}</p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {formatDate(training.start_date)} - {training.end_date ? formatDate(training.end_date) : 'Ongoing'}
+                        </p>
+                        {training.description && (
+                          <p className="text-sm mt-2 text-gray-700">{training.description}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-slate-500 text-center py-4">No trainings found</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Assessments */}
+            <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in">
+              <CardHeader className="bg-gradient-to-r from-purple-50 to-violet-50">
+                <CardTitle className="text-lg flex items-center">
+                  <Award className="mr-2 h-5 w-5 text-purple-600" />
+                  Assessments
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                {assessments.length > 0 ? (
+                  <div className="space-y-4">
+                    {assessments.map((assessment, index) => (
+                      <div 
+                        key={assessment.id}
+                        className="p-4 rounded-lg border border-purple-100 hover:bg-purple-50/30 transition-colors animate-fade-in"
+                        style={{ animationDelay: `${350 + (index * 50)}ms` }}
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between">
+                          <div>
+                            <h4 className="font-medium text-gray-800">{assessment.title}</h4>
+                            <p className="text-sm text-gray-600">{assessment.provider}</p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {formatDate(assessment.assessment_date)}
+                            </p>
+                          </div>
+                          <div className="mt-2 sm:mt-0">
+                            <Badge variant="secondary" className="bg-purple-100">
+                              Score: {assessment.score}/{assessment.max_score}
+                            </Badge>
+                          </div>
+                        </div>
+                        {assessment.certificate_url && (
+                          <a 
+                            href={assessment.certificate_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="text-purple-600 hover:underline text-xs block mt-3 story-link inline-flex items-center"
+                          >
+                            View Certificate
+                            <svg className="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-slate-500 text-center py-4">No assessments found</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Certificates */}
+            <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in">
+              <CardHeader className="bg-gradient-to-r from-indigo-50 to-blue-50">
+                <CardTitle className="text-lg flex items-center">
+                  <FileText className="mr-2 h-5 w-5 text-indigo-600" />
+                  Certificates
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                {certificates.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {certificates.map((certificate, index) => (
+                      <div 
+                        key={certificate.id}
+                        className="p-4 rounded-lg border border-indigo-100 hover:bg-indigo-50/30 transition-colors animate-fade-in hover-scale"
+                        style={{ animationDelay: `${400 + (index * 50)}ms` }}
+                      >
+                        <h4 className="font-medium text-gray-800">{certificate.title}</h4>
+                        <p className="text-sm text-gray-600">{certificate.issuer}</p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {formatDate(certificate.issue_date)}
+                          {certificate.expiry_date && ` - Expires: ${formatDate(certificate.expiry_date)}`}
+                        </p>
+                        {certificate.credential_url && (
+                          <a 
+                            href={certificate.credential_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="text-indigo-600 hover:underline text-xs block mt-2 story-link inline-flex items-center"
+                          >
+                            View Certificate
+                            <svg className="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-slate-500 text-center py-4">No certificates found</p>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          {/* Projects Tab Content */}
+          <TabsContent value="projects" className="space-y-6">
+            {/* Projects */}
+            <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in">
               <CardHeader className="bg-gradient-to-r from-teal-50 to-emerald-50">
                 <CardTitle className="text-lg flex items-center">
-                  <Book className="mr-2 h-5 w-5 text-teal-600" />
+                  <Code className="mr-2 h-5 w-5 text-teal-600" />
                   Projects
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="divide-y">
-                  {projects.map((project, index) => (
-                    <div 
-                      key={project.id} 
-                      className="p-6 hover:bg-gray-50 transition-colors animate-fade-in" 
-                      style={{ animationDelay: `${350 + (index * 50)}ms` }}
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-start justify-between">
-                        <div>
-                          <h3 className="font-semibold text-gray-800">{project.title}</h3>
-                          <p className="text-sm text-gray-500 mt-1">
-                            {formatDate(project.start_date)} - {project.end_date ? formatDate(project.end_date) : 'Ongoing'}
-                          </p>
+                {projects.length > 0 ? (
+                  <div className="divide-y">
+                    {projects.map((project, index) => (
+                      <div 
+                        key={project.id} 
+                        className="p-6 hover:bg-teal-50/30 transition-colors animate-fade-in" 
+                        style={{ animationDelay: `${350 + (index * 50)}ms` }}
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between">
+                          <div>
+                            <h3 className="font-semibold text-gray-800">{project.title}</h3>
+                            <p className="text-sm text-gray-500 mt-1">
+                              {formatDate(project.start_date)} - {project.end_date ? formatDate(project.end_date) : 'Ongoing'}
+                            </p>
+                          </div>
                         </div>
+                        <p className="mt-3 text-gray-700">{project.description}</p>
+                        {project.technologies && project.technologies.length > 0 && (
+                          <div className="mt-3 flex flex-wrap gap-1.5">
+                            {project.technologies.map((tech, idx) => (
+                              <Badge key={idx} variant="outline" className="hover-scale bg-teal-50">{tech}</Badge>
+                            ))}
+                          </div>
+                        )}
+                        {project.project_url && (
+                          <div className="mt-3">
+                            <a 
+                              href={project.project_url} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="text-teal-600 hover:underline text-sm story-link inline-flex items-center"
+                            >
+                              View Project
+                              <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                            </a>
+                          </div>
+                        )}
                       </div>
-                      <p className="mt-3 text-gray-700">{project.description}</p>
-                      {project.technologies && project.technologies.length > 0 && (
-                        <div className="mt-3 flex flex-wrap gap-1.5">
-                          {project.technologies.map((tech, idx) => (
-                            <Badge key={idx} variant="outline" className="hover-scale">{tech}</Badge>
-                          ))}
-                        </div>
-                      )}
-                      {project.project_url && (
-                        <div className="mt-3">
-                          <a 
-                            href={project.project_url} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            className="text-blue-600 hover:underline text-sm story-link inline-flex items-center"
-                          >
-                            View Project
-                            <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                          </a>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-slate-500 text-center py-6">No projects found</p>
+                )}
               </CardContent>
             </Card>
-          )}
+          </TabsContent>
           
-          {/* Publications */}
-          {publications.length > 0 && (
-            <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in" style={{ animationDelay: '400ms' }}>
+          {/* Publications Tab Content */}
+          <TabsContent value="publications" className="space-y-6">
+            {/* Publications */}
+            <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in">
               <CardHeader className="bg-gradient-to-r from-purple-50 to-fuchsia-50">
                 <CardTitle className="text-lg flex items-center">
                   <File className="mr-2 h-5 w-5 text-purple-600" />
@@ -626,221 +899,47 @@ const UserDetail = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="divide-y">
-                  {publications.map((publication, index) => (
-                    <div 
-                      key={publication.id} 
-                      className="p-6 hover:bg-gray-50 transition-colors animate-fade-in" 
-                      style={{ animationDelay: `${450 + (index * 50)}ms` }}
-                    >
-                      <h3 className="font-semibold text-gray-800">{publication.title}</h3>
-                      <p className="text-sm text-gray-500 mt-1">
-                        {formatDate(publication.publication_date)} • {publication.publication_name}
-                      </p>
-                      <p className="mt-1 text-gray-700">Authors: {publication.authors.join(', ')}</p>
-                      {publication.doi && (
-                        <p className="text-sm mt-1 text-gray-600">DOI: {publication.doi}</p>
-                      )}
-                      {publication.url && (
-                        <div className="mt-2">
-                          <a 
-                            href={publication.url} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            className="text-blue-600 hover:underline text-sm story-link inline-flex items-center"
-                          >
-                            View Publication
-                            <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                          </a>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-          
-          {/* Skills */}
-          {skills.length > 0 && (
-            <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in" style={{ animationDelay: '150ms' }}>
-              <CardHeader className="bg-gradient-to-r from-blue-50 to-cyan-50">
-                <CardTitle className="text-lg">Skills</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="flex flex-wrap gap-2">
-                  {skills.map((skill, index) => (
-                    <Badge 
-                      key={skill.id} 
-                      variant="secondary" 
-                      className="hover-scale animate-fade-in"
-                      style={{ animationDelay: `${200 + (index * 30)}ms` }}
-                    >
-                      {skill.skill_name}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Badges */}
-          {userBadges.length > 0 && (
-            <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in" style={{ animationDelay: '200ms' }}>
-              <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50">
-                <CardTitle className="text-lg flex items-center">
-                  <Trophy className="mr-2 h-5 w-5 text-yellow-600" />
-                  Badges
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-                  {userBadges.map((userBadge, index) => {
-                    const badge = badgeTypes.find(b => b.id === userBadge.badge_id);
-                    if (!badge) return null;
-                    
-                    return (
+                {publications.length > 0 ? (
+                  <div className="divide-y">
+                    {publications.map((publication, index) => (
                       <div 
-                        key={userBadge.id} 
-                        className="flex flex-col items-center p-3 rounded-lg hover-scale animate-fade-in"
-                        style={{
-                          backgroundColor: badge.background_color,
-                          color: badge.text_color,
-                          animationDelay: `${250 + (index * 50)}ms`
-                        }}
+                        key={publication.id} 
+                        className="p-6 hover:bg-purple-50/30 transition-colors animate-fade-in" 
+                        style={{ animationDelay: `${450 + (index * 50)}ms` }}
                       >
-                        {/* Use icon based on icon_name */}
-                        {badge.icon_name === 'book' && <Book className="h-6 w-6 mb-2" />}
-                        {badge.icon_name === 'book-open' && <BookOpen className="h-6 w-6 mb-2" />}
-                        {badge.icon_name === 'award' && <Award className="h-6 w-6 mb-2" />}
-                        {badge.icon_name === 'star' && <Star className="h-6 w-6 mb-2" />}
-                        {badge.icon_name === 'file' && <File className="h-6 w-6 mb-2" />}
-                        
-                        <span className="text-xs font-medium text-center">{badge.name}</span>
-                        <span className="text-[10px] mt-1">
-                          {formatDate(userBadge.earned_at)}
-                        </span>
+                        <h3 className="font-semibold text-gray-800">{publication.title}</h3>
+                        <p className="text-sm text-gray-500 mt-1">
+                          {formatDate(publication.publication_date)} • {publication.publication_name}
+                        </p>
+                        <p className="mt-1 text-gray-700">Authors: {publication.authors.join(', ')}</p>
+                        {publication.doi && (
+                          <p className="text-sm mt-1 text-gray-600">DOI: {publication.doi}</p>
+                        )}
+                        {publication.url && (
+                          <div className="mt-2">
+                            <a 
+                              href={publication.url} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="text-purple-600 hover:underline text-sm story-link inline-flex items-center"
+                            >
+                              View Publication
+                              <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                            </a>
+                          </div>
+                        )}
                       </div>
-                    );
-                  })}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-slate-500 text-center py-6">No publications found</p>
+                )}
               </CardContent>
             </Card>
-          )}
-
-          {/* Training */}
-          {trainings.length > 0 && (
-            <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in" style={{ animationDelay: '250ms' }}>
-              <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50">
-                <CardTitle className="text-lg">Trainings</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-4">
-                  {trainings.map((training, index) => (
-                    <div 
-                      key={training.id}
-                      className="animate-fade-in"
-                      style={{ animationDelay: `${300 + (index * 50)}ms` }}
-                    >
-                      <h4 className="font-medium text-gray-800">{training.title}</h4>
-                      <p className="text-sm text-gray-600">{training.organization}</p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {formatDate(training.start_date)} - {training.end_date ? formatDate(training.end_date) : 'Ongoing'}
-                      </p>
-                      {training.description && (
-                        <p className="text-sm mt-2 text-gray-700">{training.description}</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Assessments - Separated from Certificates */}
-          {assessments.length > 0 && (
-            <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in" style={{ animationDelay: '300ms' }}>
-              <CardHeader className="bg-gradient-to-r from-violet-50 to-purple-50">
-                <CardTitle className="text-lg">Assessments</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-4">
-                  {assessments.map((assessment, index) => (
-                    <div 
-                      key={assessment.id}
-                      className="animate-fade-in"
-                      style={{ animationDelay: `${350 + (index * 50)}ms` }}
-                    >
-                      <h4 className="font-medium text-gray-800">{assessment.title}</h4>
-                      <p className="text-sm text-gray-600">{assessment.provider}</p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {formatDate(assessment.assessment_date)}
-                      </p>
-                      <p className="text-sm font-medium mt-1 text-gray-800">
-                        Score: {assessment.score}/{assessment.max_score}
-                      </p>
-                      {assessment.certificate_url && (
-                        <a 
-                          href={assessment.certificate_url} 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="text-blue-600 hover:underline text-xs block mt-1 story-link inline-flex items-center"
-                        >
-                          View Certificate
-                          <svg className="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </a>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Certificates - Separated from Assessments */}
-          {certificates.length > 0 && (
-            <Card className="overflow-hidden border shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in" style={{ animationDelay: '350ms' }}>
-              <CardHeader className="bg-gradient-to-r from-indigo-50 to-blue-50">
-                <CardTitle className="text-lg">Certificates</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-4">
-                  {certificates.map((certificate, index) => (
-                    <div 
-                      key={certificate.id}
-                      className="animate-fade-in"
-                      style={{ animationDelay: `${400 + (index * 50)}ms` }}
-                    >
-                      <h4 className="font-medium text-gray-800">{certificate.title}</h4>
-                      <p className="text-sm text-gray-600">{certificate.issuer}</p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {formatDate(certificate.issue_date)}
-                        {certificate.expiry_date && ` - Expires: ${formatDate(certificate.expiry_date)}`}
-                      </p>
-                      {certificate.credential_url && (
-                        <a 
-                          href={certificate.credential_url} 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="text-blue-600 hover:underline text-xs block mt-1 story-link inline-flex items-center"
-                        >
-                          View Certificate
-                          <svg className="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </a>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </SimpleLayout>
   );

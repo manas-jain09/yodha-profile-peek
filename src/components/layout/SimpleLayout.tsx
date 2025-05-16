@@ -23,7 +23,6 @@ export const SimpleLayout = ({ children }: SimpleLayoutProps) => {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-30">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <Link to={isAuthenticated ? "/dashboard" : "/login"} className="flex items-center">
-            <ShieldCheck className="h-5 w-5 text-indigo-600 mr-2" />
             <span className="font-bold text-lg">YodhaAdmin</span>
           </Link>
           
