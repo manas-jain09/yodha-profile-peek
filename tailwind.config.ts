@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,21 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Add custom red color theme
+				red: {
+					DEFAULT: '#ea384c',
+					50: '#fff0f2',
+					100: '#ffe1e5',
+					200: '#ffc8d1',
+					300: '#ffa0b0',
+					400: '#ff6a83',
+					500: '#f83d5c',
+					600: '#ea384c',
+					700: '#d01e36',
+					800: '#b21c31',
+					900: '#971c2f',
+					950: '#520a16'
 				}
 			},
 			borderRadius: {

@@ -23,7 +23,7 @@ export const SimpleLayout = ({ children }: SimpleLayoutProps) => {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-30">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <Link to={isAuthenticated ? "/dashboard" : "/login"} className="flex items-center">
-            <span className="font-bold text-lg">YodhaAdmin</span>
+            <span className="font-bold text-lg text-red-600">YodhaAdmin</span>
           </Link>
           
           <div className="flex items-center gap-4">
@@ -43,7 +43,7 @@ export const SimpleLayout = ({ children }: SimpleLayoutProps) => {
                 </Button>
               </>
             ) : (
-              <Button asChild size="sm">
+              <Button asChild size="sm" className="bg-red-600 hover:bg-red-700">
                 <Link to="/login">Sign in</Link>
               </Button>
             )}
