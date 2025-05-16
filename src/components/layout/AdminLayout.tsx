@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { ShieldCheck, Users, Settings, LayoutDashboard, Menu, X } from "lucide-react";
+import { Users, Settings, LayoutDashboard, Menu, X } from "lucide-react";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -25,8 +25,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white border-b border-slate-200 px-4 py-3">
         <div className="flex items-center justify-between">
           <Link to="/dashboard" className="flex items-center">
-            <ShieldCheck className="h-6 w-6 text-indigo-600" />
-            <span className="ml-2 font-bold text-lg">YodhaAdmin</span>
+            <span className="font-bold text-lg">YodhaAdmin</span>
           </Link>
           <Button 
             variant="ghost" 
@@ -53,8 +52,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
       )}>
         <div className="p-4 border-b border-slate-200">
           <Link to="/dashboard" className="flex items-center" onClick={() => setSidebarOpen(false)}>
-            <ShieldCheck className="h-6 w-6 text-indigo-600" />
-            <span className="ml-2 font-bold text-lg">YodhaAdmin</span>
+            <span className="font-bold text-lg">YodhaAdmin</span>
           </Link>
         </div>
         

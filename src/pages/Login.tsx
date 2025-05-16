@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck } from "lucide-react";
 
 const Login = () => {
   const [prn, setPrn] = useState("");
@@ -38,12 +37,6 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
       <div className="w-full max-w-md">
-        <div className="flex justify-center mb-6">
-          <div className="bg-indigo-600 p-3 rounded-full">
-            <ShieldCheck className="h-8 w-8 text-white" />
-          </div>
-        </div>
-        
         <Card className="border-0 shadow-lg">
           <CardHeader className="space-y-1 text-center">
             <CardTitle className="text-2xl font-bold">Welcome to YodhaAdmin</CardTitle>

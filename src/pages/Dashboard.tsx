@@ -8,13 +8,11 @@ import UsersTable from "@/components/users/UsersTable";
 import UserFilters, { FilterState } from "@/components/users/UserFilters";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/components/ui/use-toast";
-import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
 import { User } from "@/types/supabaseTypes";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { isAuthenticated, isLoading: authLoading, logout, user } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     department: [],
@@ -76,19 +74,6 @@ const Dashboard = () => {
     setFilters(newFilters);
   };
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      // Navigation is now handled in the logout function
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to log out",
-        variant: "destructive",
-      });
-    }
-  };
-
   if (authLoading) {
     return (
       <SimpleLayout>
@@ -112,14 +97,6 @@ const Dashboard = () => {
             <h1 className="text-2xl font-bold text-slate-800">User Management</h1>
             <p className="text-slate-500 mt-1">View and manage all users in the system.</p>
           </div>
-          <Button 
-            variant="outline" 
-            onClick={handleLogout} 
-            className="flex items-center gap-2 hover:bg-red-50 hover:text-red-600 transition-colors"
-          >
-            <LogOut size={16} />
-            Logout
-          </Button>
         </div>
 
         <UserFilters onFilterChange={handleFilterChange} />
